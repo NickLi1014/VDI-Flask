@@ -1,0 +1,72 @@
+{% extends "bootstrap/base.html" %}
+{% block mytitle %}
+vpn
+{%endblock%}
+
+{% block css %}
+    <link href="{{ url_for('static',filename='css/loginweb.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+<script>
+function myFunction() {
+  var txt;
+  if (confirm('確認送出嗎')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+</script>
+
+{% endblock %}
+{% block content %}
+
+{% if session.admin == "admin"%}
+    <h1>Welcome Admin {{ session.uname }} </h1>
+{% else %}
+    <h1>Welcome {{ session.uname }} </h1>
+{% endif %}
+<div class="msg">    
+{% if msg != "" %}
+    {% if msg == "Success" %}
+        <span id="msgs">Qrcode已成功寄出!請至{{email}}信箱收信</span>
+    {% else %}
+        <span id="msgf">No such user </span>
+    {% endif %}
+{%endif%}
+
+
+
+</div>
+<p id="demo"></p>
+<form class="form-signin" method="post" action="{{ url_for('loginweb') }}" onsubmit="return myFunction()" >
+    {% if session.admin == "admin"%}
+    <label for="uname" class="sr-only">請輸入使用者VPN名稱</label>
+    <input name="uname" type="mail" id="inputuser" class="form-control" placeholder="" required autofocus>
+    {%else%}
+    <label for="uname" class="sr-only">請輸入使用者VPN名稱</label>
+    <input name="uname" type="mail" id="inputuser" class="form-control" placeholder="" value="{{session.uname}}" readonly required autofocus>
+
+    {% if fmsg == "yes" %}
+    <label for="fname" class="sr-only">目前的email</label>
+    <input name="uname" type="mail" id="inputuser" class="form-control" placeholder="" value="{{ ret }}" readonly required autofocus>
+    {%elif fmsg == "no" %}
+    <label for="fname" class="sr-only">目前的email</label>
+    <input name="uname" type="mail" id="inputuser" class="form-control" placeholder="" value="no data" readonly required autofocus>
+    {%else%}
+    <label for="fname" class="sr-only">目前的email</label>
+    <a>no data</a>
+    {% endif %}
+    {%endif%}
+
+    <label for="usmail" class="sr-only">請輸入寄送的mail</label>
+    <input name="umail" type="email" id="inputemail" class="form-control" placeholder="email@mail.com" required autofocus>
+    <button class="btn btn-lg btn-primary btn-block" id="show" type="submit" onclick ="sendmsg()">送出</button>
+    <p class="mt-5 mb-3 text-muted">&copy; vpn nick. All rights reserved.</p>
+</form>
+
+
+
+{% endblock content %}

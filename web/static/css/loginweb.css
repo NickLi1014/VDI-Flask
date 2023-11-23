@@ -1,0 +1,16 @@
+.msg{
+    margin-bottom: 4%;
+}
+#msgs{
+    font-size: 20px;
+    color: green;
+    position: absolute;
+    animation: buttons .3s linear;
+}
+#msgf{
+    font-size: 20px;
+    color: red;
+    position: absolute;
+    animation: buttons .3s linear;
+    margin-bottom: 1%;
+}

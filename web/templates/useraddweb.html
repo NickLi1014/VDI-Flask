@@ -1,0 +1,59 @@
+{% extends "bootstrap/base.html" %}
+{% block mytitle %}
+vpn
+{%endblock%}
+
+{% block css %}
+    <link href="{{ url_for('static',filename='css/loginweb.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+<script>
+function myFunction() {
+  var txt;
+  if (confirm('確認送出嗎')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+</script>
+
+{% endblock %}
+{% block content %}
+
+{% if session.admin == "admin"%}
+    <h1>Welcome useradd {{ session.uname }} </h1>
+{% else %}
+    <h1>Welcome {{ session.uname }} </h1>
+{% endif %}
+<div class="msg">    
+{% if msg != "" %}
+    {% if msg == "Success" %}
+        <span id="msgs">成功新增使用者{{userid}}</span>
+    {% else %}
+        <span id="msgf">have same user </span>
+    {% endif %}
+{%endif%}
+
+</div>
+<p id="demo"></p>
+<form class="form-signin" method="post" action="{{ url_for('useraddweb') }}" onsubmit="return myFunction()" >
+    {% if session.admin == "admin"%}
+    <label for="uname" class="sr-only">請輸入要新增的使用者</label>
+    <input name="uname" type="mail" id="inputuser" class="form-control" placeholder="" required autofocus>
+    {%else%}
+    <label for="uname" class="sr-only">請輸入要新增的使用者</label>
+    <input name="uname" type="mail" id="inputuser" class="form-control" placeholder="" value="{{session.uname}}" readonly required autofocus>
+    {%endif%}
+    
+    <label for="uspass" class="sr-only">請輸入密碼</label>
+    <input name="upasswd" type="password" id="inputPassword" class="form-control" placeholder="Password" required autofocus>
+    <button class="btn btn-lg btn-primary btn-block" id="show" type="submit" onclick ="sendmsg()">送出</button>
+    <p class="mt-5 mb-3 text-muted">&copy; vpn nick. All rights reserved.</p>
+</form>
+
+
+
+{% endblock content %}

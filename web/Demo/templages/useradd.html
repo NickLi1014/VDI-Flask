@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+{% block mytitle %}
+vpn
+{%endblock%}
+{% block content %}
+
+<form class="form-signin" method="post" action={{ url_for('useradd') }} >
+  <br>
+    <h1 class="h3 mb-3 font-weight-normal">Useradd Please sign in</h1>
+    <span style="color:red;">{{error_message}}</span>
+    <br>
+    <label for="inputaccount" class="sr-only">user</label>
+    <input name="acname" type="account" id="inputaccount" class="form-control" placeholder="user address" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input name="passwd" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <br>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">&copy; vpn nick. All rights reserved.</p>
+  </form>
+
+
+{% endblock content %}

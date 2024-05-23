@@ -1,0 +1,111 @@
+{% extends "bootstrap/base.html" %}
+{% block mytitle %}
+vpn
+{%endblock%}
+
+{% block css %}
+    <link href="{{ url_for('static',filename='css/userlistweb.css') }}" rel="stylesheet" />
+    
+{% endblock %}
+
+{% block js %}
+    <script src="https://kit.fontawesome.com/7d0fbdeb4e.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script type=text/javascript>
+     function delete_user(username)
+        {
+            if (confirm('Are you sure you want to delete ' + username + '?')) {
+                var form_data = new FormData();
+                form_data.append('theName', username);
+                $.ajax({
+                    url: $SCRIPT_ROOT + "/route_function",
+                    type: "POST",
+                    data: form_data,
+                    success:  (data) => {
+                        console.log(data.validate);
+                        alert(data.validate);
+                        window.location.reload();
+                    },
+                    contentType: false,
+                    processData: false,
+                    dataType: "json"
+                });
+            }
+            return false;
+        }
+    </script>
+
+{% endblock %}
+{% block content %}
+
+ 
+<br>
+
+
+<span id="msg" style="color: crimson;">{{ msg }}</span>
+
+<div class="formlist">
+	<form method="get" action="{{ url_for('userlistweb') }}">
+		<input type="text" name="name" placeholder="關鍵字" />
+		<input type="submit" value="查詢"/>
+	</form>
+	</div>
+<table>
+    <tr>
+        <th>序號</th>
+        <th>Username</th>
+        <th>email</th>
+        <th>Actions</th>
+    </tr>
+  
+    <tr>
+        <td><span>Test</span></td>
+
+                <td>
+                    <input name="a" type="text" id="theName"  placeholder="" value="test"  readonly required autofocus>    
+                </td>
+                <td>
+                    <input name="a" type="text" id="theName"  placeholder="" value="test@gmail"  readonly required autofocus>    
+                </td>
+                <td>
+                    <button type="button" id="testBTN" class="snip0050 red"  title="Delete" onclick="return delete_user('test');" ><span>Delete</span><i class="ion-ios-trash-outline"></i></button>    
+                </td>
+
+
+    </tr>
+    <tr>
+        <td><span>Test2</span></td>
+
+                <td>
+                    <input name="a" type="text" id="theName"  placeholder="" value="test2"  readonly required autofocus>    
+                </td>
+                <td>
+                    <input name="a" type="text" id="theName"  placeholder="" value="test2@gmail"  readonly required autofocus>    
+                </td>
+                <td>
+                    <button type="button" id="testBTN" class="snip0050 red"  title="Delete" onclick="return delete_user('test');" ><span>Delete</span><i class="ion-ios-trash-outline"></i></button>    
+                </td>
+
+
+    </tr>
+    <tr>
+        <td><span>Test3</span></td>
+
+                <td>
+                    <input name="a" type="text" id="theName"  placeholder="" value="test3"  readonly required autofocus>    
+                </td>
+                <td>
+                    <input name="a" type="text" id="theName"  placeholder="" value="test3@gmail"  readonly required autofocus>    
+                </td>
+                <td>
+                    <button type="button" id="testBTN" class="snip0050 red"  title="Delete" onclick="return delete_user('test');" ><span>Delete</span><i class="ion-ios-trash-outline"></i></button>    
+                </td>
+
+
+    </tr>
+</table>
+<p class="mt-5 mb-3 text-muted">&copy; vpn nick. All rights reserved.</p>
+{% endblock  %}

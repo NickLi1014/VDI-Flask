@@ -26,3 +26,35 @@ Userlist
 
 ![image](https://github.com/NickLi1014/VDI-Flask/assets/73222054/d79d7711-0259-4065-b8a6-15f6af9f78fe)
 
+
+
+<h1>2024/6/20</h1>
+<h2>因應 GOOGLE 關閉了MFA的API功能 不能透過domain方式取得QR-code</h2>
+
+
+[google聲明](https://developers.google.com/chart/image?hl=zh-tw) 
+
+[google MFA 404](https://invisioncommunity.com/forums/topic/477789-google-authenticator-has-stoped-working-as-mfa/)
+
+
+這邊提供另外一種方式 [Quickchat](https://quickchart.io/documentation/qr-codes/) 
+
+![image](https://github.com/NickLi1014/VDI-Flask/assets/73222054/91527f53-bd88-4e43-8c2b-9bcc64d12243)
+
+
+透過 它的QR-code API 讓程式碼取得要的Text 帶給API 寄信給使用者 即可達成同樣效果!!!
+
+
+code:
+```
+Qr=line[1].split('chl=')
+Qr='https://quickchart.io/qrtext='+Qr[1]+'&size=600'message = MIMEText( line[0]+Qr+"\n"+line[2]+line[3]+line[4]+line[5] , 'plain', 'utf-8')
+```
+
+![image](https://github.com/NickLi1014/VDI-Flask/assets/73222054/21eac614-a4fc-4b85-b916-9345acd383b5)
+
+![image](https://github.com/NickLi1014/VDI-Flask/assets/73222054/296d37cd-f794-44fc-ab5a-68b1f378d15b)
+
+
+一天又平安的過去了...感謝google大神
+

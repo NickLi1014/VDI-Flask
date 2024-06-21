@@ -128,7 +128,9 @@ def loginweb():
             smtp.login("syspost1176@gmail.com", "qzlpizjfxuhqqpzg") 
             from_addr="syspost1176@gmail.com"
             to_addr=[email]
-            message = MIMEText( line[0]+line[1]+line[2]+line[3]+line[4]+line[5] , 'plain', 'utf-8')
+            Qr=line[1].split('chl=') #切割 字串
+            Qr='https://quickchart.io/qr?text='+Qr[1]+'&size=600' #串接Quickchart API 
+            message = MIMEText( line[0]+Qr+"\n"+line[2]+line[3]+line[4]+line[5] , 'plain', 'utf-8') #整合字串
             message['From'] = Header("SYS", 'utf-8')   # 发送者
             message['To'] =  Header("vpnuser", 'utf-8')        # 接收者
             subject = 'Vpn驗證碼'

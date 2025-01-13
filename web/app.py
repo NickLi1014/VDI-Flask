@@ -4,6 +4,7 @@ from views.checkaccount import *
 from datetime import timedelta
 from flask_session import Session
 import os
+import subprocess
 import json
 import smtplib
 import time
@@ -97,8 +98,6 @@ def loginweb():
             ret = os.read(fd,100)
             print(ret.decode())
             ret = ret.decode()
-            
-
         else:
             fmsg="no"
         session.permanent = True
@@ -106,43 +105,45 @@ def loginweb():
             userid = request.values['uname']
             email = request.values['umail']                                    
             #----linux----
-            
-            msg = ""
-            dir=f"/home/{userid}/googleOTP"
-            home = f"/home/{userid}"
-            
-            a=os.popen(f'echo {email} > {home}/email')
-            a=os.popen(f'su - {userid} -c ""')
-            time.sleep(1) 
-            
-            a=os.popen(f'su - {userid} -c "/usr/bin/google-authenticator -f -t -w 3 -r 3 -R 30 -d -e 1 -Q utf8 -l vpn -i vpn" > {dir}')
-            time.sleep(2)
-            f = open(f'{dir}','r')
-            line = f.readlines()
-            #Qrcode = Qrcode.replace('www.google.com','chart.googleapis.com')
+            checkid = subprocess.call(f"id {userid}", shell=True)
+            if checkid == 0:
+                msg = ""
+                dir=f"/home/{userid}/googleOTP"
+                home = f"/home/{userid}"
+                
+                a=os.popen(f'echo {email} > {home}/email')
+                a=os.popen(f'su - {userid} -c ""')
+                time.sleep(1) 
+                
+                a=os.popen(f'su - {userid} -c "/usr/bin/google-authenticator -f -t -w 3 -r 3 -R 30 -d -e 1 -Q utf8 -l vpn -i vpn" > {dir}')
+                time.sleep(2)
+                f = open(f'{dir}','r')
+                line = f.readlines()
+                #Qrcode = Qrcode.replace('www.google.com','chart.googleapis.com')
 
-            #-----SMTP----
-            smtp=smtplib.SMTP("smtp.gmail.com", 587)  
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.login("syspost1176@gmail.com", "qzlpizjfxuhqqpzg") 
-            from_addr="syspost1176@gmail.com"
-            to_addr=[email]
-            Qr=line[1].split('chl=') #切割 字串
-            Qr='https://quickchart.io/qr?text='+Qr[1]+'&size=600' #串接Quickchart API 
-            message = MIMEText( line[0]+Qr+"\n"+line[2]+line[3]+line[4]+line[5] , 'plain', 'utf-8') #整合字串
-            message['From'] = Header("SYS", 'utf-8')   # 发送者
-            message['To'] =  Header("vpnuser", 'utf-8')        # 接收者
-            subject = 'Vpn驗證碼'
-            message['Subject'] = Header(subject, 'utf-8')
-            f.close()
-            status=smtp.sendmail(from_addr, to_addr, message.as_string())
-            if status=={}:
-                msg = "Success"
+                #-----SMTP----
+                smtp=smtplib.SMTP("smtp.gmail.com", 587)  
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login("syspost1176@gmail.com", "qzlpizjfxuhqqpzg") 
+                from_addr="syspost1176@gmail.com"
+                to_addr=[email]
+                Qr=line[1].split('chl=')
+                Qr='https://quickchart.io/qr?text='+Qr[1]+'&size=600'
+                message = MIMEText( line[0]+Qr+"\n"+line[2]+line[3]+line[4]+line[5] , 'plain', 'utf-8')
+                message['From'] = Header("SYS", 'utf-8')   # 发送者
+                message['To'] =  Header("vpnuser", 'utf-8')        # 接收者
+                subject = 'Vpn驗證碼'
+                message['Subject'] = Header(subject, 'utf-8')
+                f.close()
+                status=smtp.sendmail(from_addr, to_addr, message.as_string())
+                if status=={}:
+                    msg = "Success"
+                else:
+                    msg = "failed"
+                smtp.quit()
             else:
                 msg = "failed"
-            smtp.quit()
-            
         return render_template('loginweb.html',**locals())
     return redirect("/login") 
 
